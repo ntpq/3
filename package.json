@@ -13,6 +13,7 @@
       "build": "yarn workspace @scaffold-eth/vite-app build",
       "serve": "yarn workspace @scaffold-eth/vite-app serve",
       "chain": "yarn workspace @scaffold-eth/hardhat chain",
+      "dev": "yarn workspace @nzt/web dev",
       "fork": "yarn workspace @scaffold-eth/hardhat fork",
       "node": "yarn workspace @scaffold-eth/hardhat chain",
       "test": "yarn workspace @scaffold-eth/hardhat test",
@@ -56,10 +57,10 @@
          "packages/hardhat-ts",
          "packages/vite-app-ts",
          "packages/services/*",
+         "packages/nzt-web",
          "packages/subgraph"
       ]
    },
-   "packageManager": "yarn@3.1.0",
    "devDependencies": {
       "eslint": "^8.6.0",
       "prettier": "^2.5.1",
