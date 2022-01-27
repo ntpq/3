@@ -12,6 +12,8 @@
       "module": "CommonJS",
       "moduleResolution": "node",
       "noImplicitThis":true,
+      "rootDir": ".",
+      "baseUrl": ".",
       "outDir": "dist",
       "skipLibCheck": true,
       "strict": true,
@@ -19,8 +21,8 @@
       "target": "es6",
   },
 
-  "files": ["./hardhat.config.ts"],
-  "include": [
-      "./src", "./typechain", "abi/**/*.json"
-  ]
+  // "files": ["./hardhat.config.ts"],
+  "include": ["types", "scripts", "test", "helpers", "./hardhat.config.ts", "./deploy"],
+  "exclude": ["**/node_modules", ".husky", "./src/styles/css", "./tailwind.config.js"],
+  "files": ["./hardhat.config.ts", "helpers/types/__global.ts"]
 }

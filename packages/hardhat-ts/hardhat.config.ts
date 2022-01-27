@@ -1,7 +1,7 @@
-/**
- * @type import('hardhat/config').HardhatUserConfig
- */
-
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable import/order */
+// This adds support for typescript paths mappings
 import "@typechain/hardhat";
 import '@nomiclabs/hardhat-waffle';
 import "@nomiclabs/hardhat-ethers";
@@ -9,116 +9,218 @@ import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-solhint";
 import "dotenv/config";
 import "solidity-coverage";
-import { HardhatUserConfig } from 'hardhat/types';
+import { HardhatUserConfig, task } from 'hardhat/config';
 import 'hardhat-deploy';
 import '@openzeppelin/hardhat-upgrades';
 import 'hardhat-abi-exporter';
 import '@openzeppelin/hardhat-upgrades';
 import 'hardhat-gas-reporter';
+import { HttpNetworkUserConfig } from 'hardhat/types';
+const fs = require('fs');
 
 
 require('./hardhat');
+// const { isAddress, getAddress, formatUnits, parseUnits } = utils;
+//
+// Select the network you want to deploy to here:
+//
+const TARGET_NETWORK = process.env.NETWORK || 'localhost';
 
-// import "./tasks/accounts";
-// import "./tasks/balance";
-// import "./tasks/block-number";
-// import "./tasks/create-collectibles";
-
-// const MAINNET_RPC_URL =
-//     process.env.MAINNET_RPC_URL ||
-//     process.env.ALCHEMY_MAINNET_RPC_URL ||
-//     "https://eth-mainnet.alchemyapi.io/v2/your-api-key";
-// const RINKEBY_RPC_URL =
-//     process.env.RINKEBY_RPC_URL ||
-//     "https://eth-rinkeby.alchemyapi.io/v2/your-api-key";
-// const KOVAN_RPC_URL =
-//     process.env.KOVAN_RPC_URL ||
-//     "https://eth-kovan.alchemyapi.io/v2/your-api-key";
-// const ETHERSCAN_API_KEY =
-//     process.env.ETHERSCAN_API_KEY || "Your etherscan API key";
-// optional
-
-// const MNEMONIC = process.env.MNEMONIC || "your mnemonic";
-
-const PRIVATE_KEY = process.env.PRIVATE_KEY || "your private key";
-const PRIVATE_KEY_2 = process.env.PRIVATE_KEY_2 || "your private key";
-const PINATA_API_KEY = process.env.PINATA_API_KEY;
-const PINATA_API_SECRET = process.env.PINATA_API_SECRET;
-
-/**
- * @type import('hardhat/config').HardhatUserConfig
- */
-const config: HardhatUserConfig = {
-  defaultNetwork: "hardhat",
-  networks: {
-    hardhat: {
-    },
-    bscTest: {
-      url: 'https://data-seed-prebsc-1-s1.binance.org:8545',
-      saveDeployments: true,
-      tags: ['bscTest'],
-      accounts: [PRIVATE_KEY, PRIVATE_KEY_2],
-    },
-    testnet: {
-      url: 'https://babel-api.testnet.iotex.io',
-      accounts: [PRIVATE_KEY, PRIVATE_KEY_2],
-      chainId: 4690,
-      gas: 8500000,
-      saveDeployments: true,
-      gasPrice: 1000000000000
-    },
-    mainnet: {
-      url: 'https://babel-api.mainnet.iotex.io',
-      accounts: [PRIVATE_KEY, PRIVATE_KEY_2],
-      saveDeployments: true,
-      timeout: 3 * 20000,
-      chainId: 4689,
-      gas: 8500000,
-      gasPrice: 1000000000000
-    },
-    kovan: {
-      url: 'https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
-      saveDeployments: true,
-      tags: ['kovan'],
-      accounts: [PRIVATE_KEY, PRIVATE_KEY_2],
-    },
-    rinkeby: {
-      url: 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
-      saveDeployments: true,
-      tags: ['rinkeby'],
-      accounts: [PRIVATE_KEY, PRIVATE_KEY_2],
-    },
-  },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
-  },
-  solidity: {
-    version: "0.8.9",
-    settings: {
-      optimizer: {
-        enabled: false,
-        runs: 200
-      },
-      evmVersion: "istanbul"
+const mnemonicPath = './generated/mnemonic.secret';
+const getMnemonic = () => {
+  try {
+    return fs.readFileSync(mnemonicPath).toString().trim();
+  } catch (e) {
+    // @ts-ignore
+    if (TARGET_NETWORK !== 'localhost') {
+      console.log('☢️ WARNING: No mnemonic file created for a deploy account. Try `yarn run generate` and then `yarn run account`.');
     }
-  },
-  namedAccounts: {
-    deployer: 0,
-    simpleERC20Beneficiary: 1,
-  },
-  paths: {
-    sources: 'contracts',
-  },
-  typechain: {
-    outDir: "typechain",
-    target: "ethers-v5",
-  },
+  }
+  return '';
 };
 
+const config: HardhatUserConfig = {
+  defaultNetwork: TARGET_NETWORK,
+  namedAccounts: {
+    deployer: {
+      default: 0, // here this will by default take the first account as deployer
+    },
+  },
+  // don't forget to set your provider like:
+  // REACT_APP_PROVIDER=https://dai.poa.network in packages/react-app/.env
+  // (then your frontend will talk to your contracts on the live network!)
+  // (you will need to restart the `yarn run start` dev server after editing the .env)
 
-// https://github.com/wighawag/tutorial-hardhat-deploy
-// https://github.com/protokol/solidity-typescript-hardhat-template
-// yarn hardhat --network rinkeby etherscan-verify --api-key <api-key>
+  networks: {
+    localhost: {
+      url: 'http://localhost:8545',
+      /*
+        if there is no mnemonic, it will just use account 0 of the hardhat node to deploy
+        (you can put in a mnemonic here to set the deployer locally)
+      */
+      // accounts: {
+      //   mnemonic: mnemonic(),
+      // },
+    },
+    rinkeby: {
+      url: 'https://rinkeby.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad', // <---- YOUR INFURA ID! (or it won't work)
+      accounts: {
+        mnemonic: getMnemonic(),
+      },
+    },
+    kovan: {
+      url: 'https://kovan.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad', // <---- YOUR INFURA ID! (or it won't work)
+      accounts: {
+        mnemonic: getMnemonic(),
+      },
+    },
+    mainnet: {
+      url: 'https://mainnet.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad', // <---- YOUR INFURA ID! (or it won't work)
+      accounts: {
+        mnemonic: getMnemonic(),
+      },
+    },
+    ropsten: {
+      url: 'https://ropsten.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad', // <---- YOUR INFURA ID! (or it won't work)
+      accounts: {
+        mnemonic: getMnemonic(),
+      },
+    },
+    goerli: {
+      url: 'https://goerli.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad', // <---- YOUR INFURA ID! (or it won't work)
+      accounts: {
+        mnemonic: getMnemonic(),
+      },
+    },
+    xdai: {
+      url: 'https://rpc.xdaichain.com/',
+      gasPrice: 1000000000,
+      accounts: {
+        mnemonic: getMnemonic(),
+      },
+    },
+    matic: {
+      url: 'https://rpc-mainnet.maticvigil.com/',
+      gasPrice: 1000000000,
+      accounts: {
+        mnemonic: getMnemonic(),
+      },
+    },
+  },
+  solidity: {
+    compilers: [
+      {
+        version: '0.8.6',
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: '0.7.6',
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: '0.6.7',
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+    ],
+  },
+  paths: {
+    cache: './generated/cache',
+    artifacts: './generated/artifacts',
+    deployments: './generated/deployments',
+  },
+  typechain: {
+    outDir: '../vite-app-ts/src/generated/contract-types',
+  },
+};
+export default config;
 
 
-export default config
+task('wallet', 'Create a wallet (pk) link', async (_, { ethers }) => {
+  const randomWallet = ethers.Wallet.createRandom();
+  const { privateKey } = randomWallet._signingKey();
+  console.log(`🔐 WALLET Generated as ${randomWallet.address}`);
+  console.log(`🔗 http://localhost:3000/pk#${privateKey}`);
+});
+
+task('accounts', 'Prints the list of accounts', async (_, { ethers }) => {
+  const accounts = await ethers.provider.listAccounts();
+  accounts.forEach((account: any) => console.log(account));
+});
+
+const DEBUG = true
+task('generate', 'Create a mnemonic for builder deploys', async (_, { ethers }) => {
+  const bip39 = require('bip39');
+  const hdkey = require('ethereumjs-wallet/hdkey');
+  const mnemonic = bip39.generateMnemonic();
+  if (DEBUG) console.log('mnemonic', mnemonic);
+  const seed = await bip39.mnemonicToSeed(mnemonic);
+  if (DEBUG) console.log('seed', seed);
+  const hdwallet = hdkey.fromMasterSeed(seed);
+  const wallet_hdpath = "m/44'/60'/0'/0/";
+  const account_index = 0;
+  const fullPath = wallet_hdpath + account_index;
+  if (DEBUG) console.log('fullPath', fullPath);
+  const wallet = hdwallet.derivePath(fullPath).getWallet();
+  const privateKey = `0x${wallet._privKey.toString('hex')}`;
+  if (DEBUG) console.log('privateKey', privateKey);
+  const EthUtil = require('ethereumjs-util');
+  const address = `0x${EthUtil.privateToAddress(wallet._privKey).toString('hex')}`;
+  console.log(`🔐 Account Generated as ${address} and set as mnemonic in packages/hardhat`);
+  console.log("💬 Use 'yarn run account' to get more information about the deployment account.");
+
+  fs.writeFileSync(`./generated/${address}.secret`, mnemonic.toString());
+  fs.writeFileSync(mnemonicPath, mnemonic.toString());
+});
+
+task('account', 'Get balance informations for the deployment account.', async (_, { ethers }) => {
+  const hdkey = require('ethereumjs-wallet/hdkey');
+  const bip39 = require('bip39');
+  const mnemonic = fs.readFileSync(mnemonicPath).toString().trim();
+  if (DEBUG) console.log('mnemonic', mnemonic);
+  const seed = await bip39.mnemonicToSeed(mnemonic);
+  if (DEBUG) console.log('seed', seed);
+  const hdwallet = hdkey.fromMasterSeed(seed);
+  const wallet_hdpath = "m/44'/60'/0'/0/";
+  const account_index = 0;
+  const fullPath = wallet_hdpath + account_index;
+  if (DEBUG) console.log('fullPath', fullPath);
+  const wallet = hdwallet.derivePath(fullPath).getWallet();
+  const privateKey = `0x${wallet._privKey.toString('hex')}`;
+  if (DEBUG) console.log('privateKey', privateKey);
+  const EthUtil = require('ethereumjs-util');
+  const address = `0x${EthUtil.privateToAddress(wallet._privKey).toString('hex')}`;
+
+  const qrcode = require('qrcode-terminal');
+  qrcode.generate(address);
+  console.log(`‍📬 Deployer Account is ${address}`);
+  for (const n in config.networks) {
+    // console.log(config.networks[n],n)
+    try {
+      const { url } = config.networks[n] as HttpNetworkUserConfig;
+      const provider = new ethers.providers.JsonRpcProvider('');
+      const balance = await provider.getBalance(address);
+      console.log(` -- ${n} --  -- -- 📡 `);
+      console.log(`   balance: ${ethers.utils.formatEther(balance)}`);
+      console.log(`   nonce: ${await provider.getTransactionCount(address)}`);
+    } catch (e) {
+      if (DEBUG) {
+        console.log(e);
+      }
+    }
+  }
+});
