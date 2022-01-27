@@ -27,7 +27,7 @@ import { create } from 'ipfs-http-client';
 /**
  * Set your target network!!!
  */
-const TARGET_NETWORK = 'localhost';
+const TARGET_NETWORK = 'iotexTestnet';
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //
@@ -113,6 +113,27 @@ const config: HardhatUserConfig = {
       accounts: {
         mnemonic: getMnemonic(),
       },
+    },
+    iotexTestnet: {
+      url: 'https://babel-api.testnet.iotex.io',
+      accounts: {
+        mnemonic: getMnemonic(),
+      },
+      chainId: 4690,
+      gas: 8500000,
+      saveDeployments: true,
+      gasPrice: 1000000000000
+    },
+    iotexMainnet: {
+      url: 'https://babel-api.mainnet.iotex.io',
+      accounts: {
+        mnemonic: getMnemonic(),
+      },
+      saveDeployments: true,
+      timeout: 3 * 20000,
+      chainId: 4689,
+      gas: 8500000,
+      gasPrice: 1000000000000
     },
   },
   solidity: {

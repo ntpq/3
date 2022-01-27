@@ -34,6 +34,7 @@ export const Home = observer(() => {
   // console.log(d.Box__factory)
   const addr = '0x6a32385ed3f04133b27BDe70AEfaA0b04Bb700BB'
   const ccc = new MyOracle__factory().attach(addr)
+  // ccc.getAllLocations
 
   // console.log('b', new MyOracle__factory().attach(addr))
   // console.log(ccc.dummy())
