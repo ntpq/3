@@ -47,7 +47,6 @@ export interface MyOracleInterface extends utils.Interface {
     "owner()": FunctionFragment;
     "remove(uint256)": FunctionFragment;
     "removeWhitelist(address)": FunctionFragment;
-    "sayHello()": FunctionFragment;
     "sensors(string)": FunctionFragment;
     "sensorsValue(string)": FunctionFragment;
     "setArr(uint256[10])": FunctionFragment;
@@ -99,7 +98,6 @@ export interface MyOracleInterface extends utils.Interface {
     functionFragment: "removeWhitelist",
     values: [string]
   ): string;
-  encodeFunctionData(functionFragment: "sayHello", values?: undefined): string;
   encodeFunctionData(functionFragment: "sensors", values: [string]): string;
   encodeFunctionData(
     functionFragment: "sensorsValue",
@@ -156,7 +154,6 @@ export interface MyOracleInterface extends utils.Interface {
     functionFragment: "removeWhitelist",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "sayHello", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "sensors", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "sensorsValue",
@@ -296,8 +293,6 @@ export interface MyOracle extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    sayHello(overrides?: CallOverrides): Promise<[string]>;
-
     sensors(
       arg0: string,
       overrides?: CallOverrides
@@ -391,8 +386,6 @@ export interface MyOracle extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  sayHello(overrides?: CallOverrides): Promise<string>;
-
   sensors(
     arg0: string,
     overrides?: CallOverrides
@@ -473,8 +466,6 @@ export interface MyOracle extends BaseContract {
     remove(index: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     removeWhitelist(_addr: string, overrides?: CallOverrides): Promise<void>;
-
-    sayHello(overrides?: CallOverrides): Promise<string>;
 
     sensors(
       arg0: string,
@@ -591,8 +582,6 @@ export interface MyOracle extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    sayHello(overrides?: CallOverrides): Promise<BigNumber>;
-
     sensors(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     sensorsValue(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
@@ -692,8 +681,6 @@ export interface MyOracle extends BaseContract {
       _addr: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
-
-    sayHello(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     sensors(
       arg0: string,

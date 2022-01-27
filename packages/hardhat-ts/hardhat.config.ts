@@ -18,13 +18,16 @@ import 'hardhat-gas-reporter';
 import { HttpNetworkUserConfig } from 'hardhat/types';
 const fs = require('fs');
 
+import chalk from "chalk";
+const { Confirm } = require("enquirer");
+
 
 // require('./hardhat');
 // const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //
 // Select the network you want to deploy to here:
 //
-const TARGET_NETWORK = process.env.NETWORK || 'localhost';
+const TARGET_NETWORK = process.env.NETWORK || 'iotexTestnet';
 
 const mnemonicPath = './generated/mnemonic.secret';
 const getMnemonic = () => {
@@ -105,6 +108,27 @@ const config: HardhatUserConfig = {
       accounts: {
         mnemonic: getMnemonic(),
       },
+    },
+    iotexMainnet: {
+      url: 'https://babel-api.mainnet.iotex.io',
+      accounts: {
+        mnemonic: getMnemonic(),
+      },
+      saveDeployments: true,
+      timeout: 3 * 20000,
+      chainId: 4689,
+      gas: 8500000,
+      gasPrice: 1000000000000
+    },
+    iotexTestnet: {
+      url: 'https://babel-api.testnet.iotex.io',
+      accounts: {
+        mnemonic: getMnemonic(),
+      },
+      chainId: 4690,
+      gas: 8500000,
+      saveDeployments: true,
+      gasPrice: 1000000000000
     },
   },
   solidity: {
@@ -224,3 +248,21 @@ task('account', 'Get balance informations for the deployment account.', async (_
     }
   }
 });
+
+task("deploy")
+  //   .addOptionalParam("network", "Network")
+  .setAction(async (taskArgs, hre, runSuper) => {
+    const { network } = taskArgs;
+    console.log(chalk.yellow(`Deploying...`));
+
+    const accounts = await hre.ethers.getSigners();
+
+    const prompt = new Confirm({
+      name: "question",
+      message: `Confirm to deploy with ${chalk.green(
+        accounts[0].address
+      )}`,
+    });
+
+    await prompt.run() && await runSuper(taskArgs)
+  });

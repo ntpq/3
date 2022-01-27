@@ -10,12 +10,8 @@ import ORACLE_ABI from '../constants/abi/myoracle.json'
 import { useStore } from '../store'
 
 import { MyOracle__factory } from '../generated/factories/MyOracle__factory'
-
-// import { MyOracle__factory, Box__factory } from '@nazt/contracts'
-// import * as cont from '@nazt/contracts'
-// import {MyOracle} from '../typechain/MyOracle'
-
-// const d = require("@nazt/contracts")
+import { YourContract__factory } from '../generated/factories/YourContract__factory'
+import { YourContract } from 'generated/YourContract'
 
 
 
@@ -27,36 +23,13 @@ const FullMap: any = dynamic(() => import('../components/Maps') as any, {
 export const Home = observer(() => {
   const { lang, god } = useStore()
   const { library, chainId } = useWeb3React()
-  // const { library, chainId } = useEthers()
-  // console.log('hh', nazt.MyOracleABI)
-  // console.log(c.MyOracleABI, c.MyOracleFactory, c.typechain)
-  // console.log('a', MyOracle__factory, Box__factory)
 
-  // console.log(d.Box__factory)
-  const addr = '0x6a32385ed3f04133b27BDe70AEfaA0b04Bb700BB'
+  const addr = '0x03a9Ca22532c15F6D1A52f7D00fC85D956bd45E9'
   const ccc = new MyOracle__factory().attach(addr)
-  // new MyOracle__factory().attach(addr)
-  // ccc.getAllLocations
-
-  // console.log('b', new MyOracle__factory().attach(addr))
-  // console.log(ccc.dummy())
-  // const rectangle: [number, number][] = [
-  //   [18.776683, 98.985075],
-  //   [14.592535, 100.997789],
-  //   [18.761371, 98.931855],
-  //   [13.735867, 100.279984],
-  //   [15.700899, 104.494034],
-  //   [15.862836, 104.627296],
-  //   [18.84665, 98.732204],
-  //   [19.624357, 99.359879],
-  //   [18.5892286, 99.0390486],
-  //   [16.9908527, 98.5271491],
-  // ]
 
   const [rectangle, setRectangle] = React.useState<[number, number, string][]>([])
 
   async function run() {
-    // console.log('god', god)
     try {
       const locations: any[] = (await god.currentNetwork.execContract({
         address: addr,
@@ -83,6 +56,14 @@ export const Home = observer(() => {
         console.log(await contract.getAllLocations());
     } catch (e) {
       console.log(e)
+    }
+
+    if (library) {
+      const yourContract:YourContract = new YourContract__factory().attach('0x9D71D7bEe4adb538c684A3a1406F4846e5F03724').connect(library.getSigner())
+      // const tx = await yourContract.setPurpose("Hello World");
+      // tx.wait()
+      console.log('purpose:', await yourContract.getPurpose())
+      // const await tx.wait()
     }
 
   }
