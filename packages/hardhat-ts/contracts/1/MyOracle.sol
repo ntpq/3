@@ -166,4 +166,8 @@ contract MyOracle {
   function dummy() external pure returns (string memory) {
     return 'hey';
   }
+
+  function sayHello() external pure returns (string memory) {
+    return 'hello';
+  }
 }

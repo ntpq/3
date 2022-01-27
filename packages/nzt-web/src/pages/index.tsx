@@ -84,6 +84,7 @@ export const Home = observer(() => {
     } catch (e) {
       console.log(e)
     }
+
   }
 
   useInterval(() => {
