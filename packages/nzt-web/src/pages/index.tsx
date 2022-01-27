@@ -82,7 +82,7 @@ export const Home = observer(() => {
   return (
     <>
       <div className="container flex flex-col items-center mx-auto">
-        <FullMap markers={rectangle} hello="world" />
+<!--         <FullMap markers={rectangle} hello="world" /> -->
       </div>
     </>
   )
