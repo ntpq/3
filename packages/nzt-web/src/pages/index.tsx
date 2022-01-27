@@ -9,13 +9,14 @@ import React from 'react'
 import ORACLE_ABI from '../constants/abi/myoracle.json'
 import { useStore } from '../store'
 
+import { MyOracle__factory } from '../generated/factories/MyOracle__factory'
+
 // import { MyOracle__factory, Box__factory } from '@nazt/contracts'
 // import * as cont from '@nazt/contracts'
 // import {MyOracle} from '../typechain/MyOracle'
 
 // const d = require("@nazt/contracts")
 
-import { MyOracle__factory } from '../typechain'
 
 
 
@@ -34,6 +35,7 @@ export const Home = observer(() => {
   // console.log(d.Box__factory)
   const addr = '0x6a32385ed3f04133b27BDe70AEfaA0b04Bb700BB'
   const ccc = new MyOracle__factory().attach(addr)
+  // new MyOracle__factory().attach(addr)
   // ccc.getAllLocations
 
   // console.log('b', new MyOracle__factory().attach(addr))

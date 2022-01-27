@@ -26,7 +26,6 @@ node:
 
 fresh:
 	hh clean && hh compile
-	yarn build
 
 abi:
 	cat deployments/${network}/${contract}.json | jq .abi | jq

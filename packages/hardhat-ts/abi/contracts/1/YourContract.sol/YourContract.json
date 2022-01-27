@@ -1,0 +1,6 @@
+[
+  "constructor()",
+  "event SetPurpose(address,string)",
+  "function purpose() view returns (string)",
+  "function setPurpose(string) payable"
+]
