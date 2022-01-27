@@ -8,11 +8,8 @@ import { ethers } from "hardhat";
 
 
 async function main() {
-    console.log(Signer)
-    console.log(ethers)
     let accounts: Signer[] = await hre.ethers.getSigners();
     let contract: MyOracle;
-
 
     contract = (await hre.ethers.getContract('MyOracle')) as MyOracle;
     const { deployer } = await hre.getNamedAccounts();

@@ -49,6 +49,7 @@ export interface MyOracleInterface extends utils.Interface {
     "removeWhitelist(address)": FunctionFragment;
     "sensors(string)": FunctionFragment;
     "sensorsValue(string)": FunctionFragment;
+    "setArr(uint256[10])": FunctionFragment;
     "setMeta(uint256,string,string,string)": FunctionFragment;
     "updateValue(address,uint256)": FunctionFragment;
     "valueOf(address)": FunctionFragment;
@@ -103,6 +104,10 @@ export interface MyOracleInterface extends utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
+    functionFragment: "setArr",
+    values: [BigNumberish[]]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setMeta",
     values: [BigNumberish, string, string, string]
   ): string;
@@ -154,6 +159,7 @@ export interface MyOracleInterface extends utils.Interface {
     functionFragment: "sensorsValue",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "setArr", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setMeta", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "updateValue",
@@ -296,6 +302,11 @@ export interface MyOracle extends BaseContract {
 
     sensorsValue(arg0: string, overrides?: CallOverrides): Promise<[number]>;
 
+    setArr(
+      _values: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setMeta(
       idx: BigNumberish,
       lat: string,
@@ -384,6 +395,11 @@ export interface MyOracle extends BaseContract {
 
   sensorsValue(arg0: string, overrides?: CallOverrides): Promise<number>;
 
+  setArr(
+    _values: BigNumberish[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   setMeta(
     idx: BigNumberish,
     lat: string,
@@ -459,6 +475,8 @@ export interface MyOracle extends BaseContract {
     >;
 
     sensorsValue(arg0: string, overrides?: CallOverrides): Promise<number>;
+
+    setArr(_values: BigNumberish[], overrides?: CallOverrides): Promise<void>;
 
     setMeta(
       idx: BigNumberish,
@@ -568,6 +586,11 @@ export interface MyOracle extends BaseContract {
 
     sensorsValue(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    setArr(
+      _values: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     setMeta(
       idx: BigNumberish,
       lat: string,
@@ -667,6 +690,11 @@ export interface MyOracle extends BaseContract {
     sensorsValue(
       arg0: string,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    setArr(
+      _values: BigNumberish[],
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     setMeta(

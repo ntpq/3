@@ -19,7 +19,7 @@ import { HttpNetworkUserConfig } from 'hardhat/types';
 const fs = require('fs');
 
 
-require('./hardhat');
+// require('./hardhat');
 // const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //
 // Select the network you want to deploy to here:
